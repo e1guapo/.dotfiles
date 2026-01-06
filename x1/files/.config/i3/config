@@ -31,8 +31,8 @@ exec --no-startup-id flameshot
 # Start power manager (handles display timeout and suspend)
 exec --no-startup-id env XDG_DATA_DIRS=/usr/local/share:/usr/share:$XDG_DATA_DIRS xfce4-power-manager
 
-exec_always --no-startup-id ~/bin/setup-displays.sh
-bindsym $mod+m exec --no-startup-id ~/bin/setup-displays.sh
+exec_always --no-startup-id ~/scripts/setup-displays.sh
+bindsym $mod+m exec --no-startup-id ~/scripts/setup-displays.sh
 
 # Lock screen after 90 minutes (5400 seconds)
 exec --no-startup-id xset s 5400 5400
