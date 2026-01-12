@@ -76,6 +76,7 @@
                         "cifs-utils"
                         "node"
                         "openjdk@23.0.2"
+                        "gradle"
                         "git-lfs" ;; uncomment when not broken (ruby-activesupport test failing)
                         "gnupg"
                         "git"
@@ -132,13 +133,18 @@
                                             ("PATH" . "$HOME/.local/bin:$PATH")
                                             ("PATH" . "$HOME/bin:$PATH"))
 
-                                          ;; Android
-                                          '(("SCRCPY_PATH" .  "/home/dennis/data/tools/scrcpy-linux-x86_64-v3.3.3")
+                                          '(("GHIDRA_INSTALL_DIR" . "/opt/ghidra_11.4.2_PUBLIC")
 
-                                            ("GHIDRA_INSTALL_DIR" . "/opt/ghidra_11.4.2_PUBLIC")
+                                            ;; Android
+                                            ("SCRCPY_PATH" .  "/home/dennis/data/tools/scrcpy-linux-x86_64-v3.3.3")
+                                            ("ANDROID_SDK_ROOT" .  "/home/dennis/Android/Sdk")
 
                                             ;; Ensure Python picks up Guix-provided site-packages.
                                             ("PYTHONPATH" . "$GUIX_PYTHONPATH${PYTHONPATH:+:}$PYTHONPATH"))
+
+                                            ;; for just-every/code - open source fork of codex cli
+                                            ;; We change the default since VS Code already uses ~/.code
+                                            ;;("CODE_HOME" . "$HOME/.every-code"))
 
                                           '(("EDITOR" . "vim")
                                             ("VISUAL" . "vim")
@@ -153,8 +159,9 @@
                   (service home-bash-service-type
                            (home-bash-configuration
                             (aliases '(
-                                       ("claude" . "npx @anthropic-ai/claude-code")
-                                       ("codex" . "npx @openai/codex@latest")
+                                       ("claude" . "npx -y @anthropic-ai/claude-code")
+                                       ("codex" . "npx -y @openai/codex@latest")
+                                       ("every-code" . "npx -y @just-every/code")
                                        ("l" . "ls -CF")
                                        ("la" . "ls -A")
                                        ("ll" . "ls -alF")))
