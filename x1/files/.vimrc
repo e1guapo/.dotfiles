@@ -35,6 +35,7 @@ Plug 'junegunn/goyo.vim'
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'ludovicchabant/vim-gutentags'
 
 Plug 'preservim/nerdtree'
 "Plug 'ryanoasis/vim-devicons'
@@ -135,6 +136,7 @@ filetype plugin on
 filetype indent on
 "set number
 set fo+=t
+set omnifunc=syntaxcomplete#Complete
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
