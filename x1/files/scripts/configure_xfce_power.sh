@@ -38,9 +38,9 @@ set_property() {
 # When enabled, xss-lock will lock the screen before suspend
 set_property '/logind-handle-lid-switch' 'bool' 'true'
 
-# Display Power Management (DPMS) - never sleep/off on AC, conservative on battery
-set_property '/dpms-on-ac-sleep' 'uint' '0'
-set_property '/dpms-on-ac-off' 'uint' '0'
+# Display Power Management (DPMS) timeouts in minutes
+set_property '/dpms-on-ac-sleep' 'uint' '15'
+set_property '/dpms-on-ac-off' 'uint' '20'
 set_property '/dpms-on-battery-sleep' 'uint' '30'
 set_property '/dpms-on-battery-off' 'uint' '40'
 
