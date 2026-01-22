@@ -34,17 +34,16 @@ set_property() {
     return 1
 }
 
-# Let systemd logind handle lid switch (fixes screen lock on lid close)
-# When enabled, xss-lock will lock the screen before suspend
-set_property '/logind-handle-lid-switch' 'bool' 'true'
+# Let systemd logind handle lid switch (cleanest for i3 + xss-lock).
+set_property '/xfce4-power-manager/logind-handle-lid-switch' 'bool' 'true'
 
 # Display Power Management (DPMS) timeouts in minutes
-set_property '/dpms-on-ac-sleep' 'uint' '15'
-set_property '/dpms-on-ac-off' 'uint' '20'
-set_property '/dpms-on-battery-sleep' 'uint' '30'
-set_property '/dpms-on-battery-off' 'uint' '40'
+set_property '/xfce4-power-manager/dpms-on-ac-sleep' 'uint' '15'
+set_property '/xfce4-power-manager/dpms-on-ac-off' 'uint' '20'
+set_property '/xfce4-power-manager/dpms-on-battery-sleep' 'uint' '30'
+set_property '/xfce4-power-manager/dpms-on-battery-off' 'uint' '40'
 
 # Performance profile on AC power
-set_property '/profile-on-ac' 'string' 'performance'
+set_property '/xfce4-power-manager/profile-on-ac' 'string' 'performance'
 
 exit 0

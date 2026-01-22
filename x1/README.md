@@ -41,6 +41,10 @@ XFCE Power Manager settings are automatically configured via `files/scripts/conf
 
 **Note:** Lid actions (`lid-action-on-ac`, `lid-action-on-battery`) should be left unset in XFCE since logind handles all lid close behavior.
 
+**Logind lid policy (system-level):**
+- Install `files/etc/systemd/logind.conf.d/50-lid-switch.conf` to `/etc/systemd/logind.conf.d/` to suspend on lid close, but ignore lid events on AC power or when docked.
+  - Helper: run `scripts/install_logind_lid_policy.sh` to install the drop-in, then restart logind or reboot.
+
 **Other settings** (configured manually via GUI, not managed by script):
 - Brightness levels, button actions, etc. can be adjusted using `xfce4-power-manager-settings` GUI
 
