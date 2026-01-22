@@ -61,6 +61,10 @@
                         "binwalk"
                         "qemu"
 
+                        "simple-scan"
+                        "sane-airscan"
+                        "sane-backends"
+
                         "ranger"
                         "util-linux"
                         "gdb-multiarch"
