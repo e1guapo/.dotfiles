@@ -151,11 +151,26 @@ nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 " elguapo
-" get Ctrl-]/Ctrl-t jump definition support (as with ctags)
-set tagfunc=CocTagFunc
+" Use CocTagFunc when Coc is ready; otherwise fall back to ctags.
+function! s:tagfunc(pattern, flags, info) abort
+  if exists('b:coc_enabled') && b:coc_enabled == 0
+    return taglist(a:pattern)
+  endif
+  if exists('g:coc_enabled') && g:coc_enabled == 0
+    return taglist(a:pattern)
+  endif
+  if exists('*coc#rpc#ready') && coc#rpc#ready()
+    try
+      return CocTagFunc(a:pattern, a:flags, a:info)
+    catch
+      return taglist(a:pattern)
+    endtry
+  endif
+  return taglist(a:pattern)
+endfunction
+set tagfunc=<SID>tagfunc
 
 "hi! CocErrorSign guifg=#d1666a
 highlight CocErrorFloat ctermfg=White guifg=#ffffff
 " hi! CocInfoSign guibg=#353b45
 " hi! CocWarningSign guifg=#d1cd66
-
