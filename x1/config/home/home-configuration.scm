@@ -88,6 +88,7 @@
                         "cmake"
                         "texlive"
                         "xss-lock"
+                        "pasystray"
                         "fontconfig"
                         "slirp4netns"
                         "tk"
