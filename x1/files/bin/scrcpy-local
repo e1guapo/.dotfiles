@@ -1,0 +1,2 @@
+#!/bin/bash
+${SCRCPY_PATH}/scrcpy --stay-awake --disable-screensaver --no-audio "$@"

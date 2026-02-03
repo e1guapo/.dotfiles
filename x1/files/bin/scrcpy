@@ -1,14 +1,3 @@
 #!/bin/bash
-
-# scrcpy using remote adb (northbay-2)
-scrcpy() {
-    ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 \
-        ${SCRCPY_PATH}/scrcpy --force-adb-forward "$@"
-}
-
-# scrcpy using local adb (emulator / local device)
-scrcpy_local() {
-    ${SCRCPY_PATH}/scrcpy "$@"
-}
-
-scrcpy --stay-awake --disable-screensaver --no-audio
+ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 \
+    ${SCRCPY_PATH}/scrcpy --force-adb-forward --stay-awake --disable-screensaver --no-audio "$@"
