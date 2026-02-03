@@ -152,21 +152,53 @@ nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
 
 " elguapo
 " Use CocTagFunc when Coc is ready; otherwise fall back to ctags.
+function! s:taglist_in_parents(pattern, bufnr) abort
+  let l:orig_tags = &tags
+  let l:dir = fnamemodify(bufname(a:bufnr), ':p:h')
+  if empty(l:dir)
+    let l:dir = getcwd()
+  endif
+  while !empty(l:dir)
+    let l:tagsfile = l:dir . '/tags'
+    if filereadable(l:tagsfile)
+      let &tags = l:tagsfile
+      try
+        let l:matches = taglist(a:pattern)
+      catch
+        let l:matches = []
+      endtry
+      if !empty(l:matches)
+        let &tags = l:orig_tags
+        return l:matches
+      endif
+    endif
+    let l:parent = fnamemodify(l:dir, ':h')
+    if l:parent ==# l:dir
+      break
+    endif
+    let l:dir = l:parent
+  endwhile
+  let &tags = l:orig_tags
+  return []
+endfunction
+
 function! s:tagfunc(pattern, flags, info) abort
   if exists('b:coc_enabled') && b:coc_enabled == 0
-    return taglist(a:pattern)
+    return s:taglist_in_parents(a:pattern, get(a:info, 'bufnr', bufnr('%')))
   endif
   if exists('g:coc_enabled') && g:coc_enabled == 0
-    return taglist(a:pattern)
+    return s:taglist_in_parents(a:pattern, get(a:info, 'bufnr', bufnr('%')))
   endif
   if exists('*coc#rpc#ready') && coc#rpc#ready()
     try
-      return CocTagFunc(a:pattern, a:flags, a:info)
+      let l:result = CocTagFunc(a:pattern, a:flags, a:info)
+      if !empty(l:result)
+        return l:result
+      endif
     catch
-      return taglist(a:pattern)
     endtry
   endif
-  return taglist(a:pattern)
+  return s:taglist_in_parents(a:pattern, get(a:info, 'bufnr', bufnr('%')))
 endfunction
 set tagfunc=<SID>tagfunc
 

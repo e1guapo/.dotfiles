@@ -297,7 +297,7 @@ nnoremap <leader>cc :set colorcolumn=<cr>
 "set signcolumn="no"
 "set number! relativenumber!
 
-set tags=tags;/
+set tags=./tags
 autocmd BufRead *.rs :setlocal tags=./rusty-tags.vi;/
 autocmd BufWritePost *.rs :silent! exec "!rusty-tags vi --quiet --start-dir=" . expand('%:p:h') . "&" | redraw!
 
