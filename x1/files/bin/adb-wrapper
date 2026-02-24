@@ -1,0 +1,12 @@
+#!/bin/bash
+echo "DEBUG adb-wrapper called with: $@" >&2
+# If first arg is a serial (contains a colon), use it with -s
+if [[ "$1" == *":"* ]]; then
+    serial="$1"
+    shift
+    echo "DEBUG using serial: $serial" >&2
+    ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 command adb -s "$serial" "$@"
+else
+    echo "DEBUG no serial detected" >&2
+    ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 command adb "$@"
+fi

@@ -1,3 +1,31 @@
 #!/bin/bash
+# Extract -s argument if provided
+serial=""
+args=()
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -s|--serial)
+            serial="$2"
+            args+=("$1" "$2")
+            shift 2
+            ;;
+        *)
+            args+=("$1")
+            shift
+            ;;
+    esac
+done
+
+# Create wrapper that prepends serial
+cat > /tmp/adb-with-serial-$$ << 'EOF'
+#!/bin/bash
+exec "$HOME/bin/adb-wrapper" "SERIAL_PLACEHOLDER" "$@"
+EOF
+sed -i "s|SERIAL_PLACEHOLDER|$serial|" /tmp/adb-with-serial-$$
+chmod +x /tmp/adb-with-serial-$$
+
 ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 \
-    ${SCRCPY_PATH}/scrcpy --force-adb-forward --stay-awake --disable-screensaver --no-audio "$@"
+    ADB="/tmp/adb-with-serial-$$" \
+    ${SCRCPY_PATH}/scrcpy --force-adb-forward --stay-awake --disable-screensaver --no-audio "${args[@]}"
+
+rm -f /tmp/adb-with-serial-$$
