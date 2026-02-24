@@ -1,8 +1,13 @@
-! LOAD ONLY WHEN USING THE LAPTOP KEYBOARD!
+! Keyboard remaps for X11 (applies to laptop + external keyboards).
 !   xmodmap ~/.Xmodmap
 !
 ! Revert to default (clear this mapping):
 !   setxkbmap -option ''
+!
+! Make Shift+BackSpace send Insert.
+! Uses keysym mapping (not keycode) so it applies across keyboards.
+keysym BackSpace = BackSpace Insert BackSpace Insert
+
 ! Remove Control_R from mod4
 remove mod4 = Control_R
 ! Remap Super key to Control
