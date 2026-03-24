@@ -65,6 +65,7 @@
                         "sane-airscan"
                         "sane-backends"
 
+                        "awscli"
                         "ranger"
                         "util-linux"
                         "gdb-multiarch"

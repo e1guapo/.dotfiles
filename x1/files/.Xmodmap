@@ -8,9 +8,4 @@
 ! Uses keysym mapping (not keycode) so it applies across keyboards.
 keysym BackSpace = BackSpace Insert BackSpace Insert
 
-! Remove Control_R from mod4
-remove mod4 = Control_R
-! Remap Super key to Control
-keycode 133 = Control_R
-! Add Control_R to control
-add control = Control_R
+! Super -> Control is handled by keyd (/etc/keyd/default.conf).

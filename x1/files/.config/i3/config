@@ -24,7 +24,9 @@ font pango:DejaVu Sans Mono 20
 exec --no-startup-id env XDG_DATA_DIRS="/usr/local/share:/usr/share:/etc/xdg:${XDG_DATA_DIRS}" XDG_CONFIG_DIRS="/etc/xdg:${XDG_CONFIG_DIRS}" dex-autostart --autostart --environment i3
 exec --no-startup-id xfsettingsd
 exec --no-startup-id flameshot
-exec_always --no-startup-id xmodmap ~/.Xmodmap
+#
+# Apply xmodmap after startup daemons; some components can overwrite keymaps.
+exec_always --no-startup-id sh -c 'sleep 2; xmodmap ~/.Xmodmap'
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
 # they are included here as an example. Modify as you see fit.

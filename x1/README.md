@@ -26,6 +26,32 @@ sudo dnf install -y flatpak @virtualization setools-console
 sudo dnf install -y binutils-aarch64-linux-gnu.x86_64 gcc-aarch64-linux-gnu.x86_64
 sudo dnf install -y binutils-arm-linux-gnu.x86_64 gcc-arm-linux-gnu.x86_64
 ```
+Install terraform
+```
+wget -O- https://rpm.releases.hashicorp.com/fedora/hashicorp.repo | sudo tee /etc/yum.repos.d/hashicorp.repo
+
+# Check whether the repo is enabled
+sudo dnf repolist | grep -i hashicorp
+
+# Check whether terraform is visible in that repo
+sudo dnf repoquery --repoid=hashicorp terraform
+sudo dnf -y install terraform
+```
+
+### Install keyd (Guix on Fedora)
+Apply dotfiles and install keyd config/service:
+```
+guix home reconfigure /home/dennis/.dotfiles/x1/config/home/home-configuration.scm
+~/scripts/install_keyd_config.sh
+sudo systemctl status keyd --no-pager
+```
+
+`~/scripts/install_keyd_config.sh` installs `keyd` via `sudo -i guix install keyd` if root does not already have it.
+
+Run `~/scripts/install_keyd_config.sh` one time for initial setup, then rerun only when:
+- `files/etc/keyd/default.conf` changes
+- `files/etc/systemd/system/keyd.service` changes
+- root's keyd install path changes (for example after reinstall)
 
 ### Power Management Configuration
 
