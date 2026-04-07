@@ -59,17 +59,23 @@ XFCE Power Manager settings are automatically configured via `files/scripts/conf
 
 **Managed settings:**
 - `logind-handle-lid-switch: true` - Enables systemd logind to handle lid close events. This allows xss-lock to properly lock the screen with i3lock before suspend, preventing "screen lock failed" errors.
-- `dpms-on-ac-sleep: 0` - Never sleep display when on AC power
-- `dpms-on-ac-off: 0` - Never turn off display when on AC power
+- `dpms-on-ac-sleep: 15` - Sleep display after 15 minutes on AC power
+- `dpms-on-ac-off: 20` - Turn off display after 20 minutes on AC power
 - `dpms-on-battery-sleep: 30` - Sleep display after 30 minutes on battery
 - `dpms-on-battery-off: 40` - Turn off display after 40 minutes on battery
 - `profile-on-ac: performance` - Use performance profile when plugged in
+- `lid-action-on-ac: 1` (suspend) - Prevents hibernate attempt on lid close
+- `lid-action-on-battery: 1` (suspend) - Same as above
+- `sleep-button-action: 1` (suspend) - Prevents hibernate on sleep button
+- `hibernate-button-action: 1` (suspend) - Prevents hibernate on hibernate button
 
-**Note:** Lid actions (`lid-action-on-ac`, `lid-action-on-battery`) should be left unset in XFCE since logind handles all lid close behavior.
+**Important:** Lid/button actions must be set to `1` (suspend), not `3` (hibernate) or `4` (shutdown). Hibernate is blocked by kernel lockdown (Secure Boot), and the fallback is **poweroff**, causing unexpected shutdowns.
 
 **Logind lid policy (system-level):**
 - Install `files/etc/systemd/logind.conf.d/50-lid-switch.conf` to `/etc/systemd/logind.conf.d/` to suspend on lid close, but ignore lid events on AC power or when docked.
-  - Helper: run `scripts/install_logind_lid_policy.sh` to install the drop-in, then restart logind or reboot.
+  - Helper: run `files/scripts/install_logind_lid_policy.sh` to install the drop-in and restart logind.
+
+**Troubleshooting:** See `TROUBLESHOOTING.md` for external monitor and unexpected shutdown issues.
 
 **Other settings** (configured manually via GUI, not managed by script):
 - Brightness levels, button actions, etc. can be adjusted using `xfce4-power-manager-settings` GUI

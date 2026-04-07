@@ -46,4 +46,15 @@ set_property '/xfce4-power-manager/dpms-on-battery-off' 'uint' '40'
 # Performance profile on AC power
 set_property '/xfce4-power-manager/profile-on-ac' 'string' 'performance'
 
+# Lid close: suspend (1) instead of shutdown (4).
+# Value 4 triggers hibernate which is blocked by kernel lockdown, causing
+# an unexpected poweroff.
+set_property '/xfce4-power-manager/lid-action-on-ac' 'uint' '1'
+set_property '/xfce4-power-manager/lid-action-on-battery' 'uint' '1'
+
+# Button actions: suspend (1) instead of hibernate (3).
+# Same hibernate-blocked-by-lockdown issue.
+set_property '/xfce4-power-manager/sleep-button-action' 'uint' '1'
+set_property '/xfce4-power-manager/hibernate-button-action' 'uint' '1'
+
 exit 0
