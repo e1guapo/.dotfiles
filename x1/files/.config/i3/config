@@ -38,6 +38,9 @@ exec_always --no-startup-id ~/scripts/setup-displays.sh
 bindsym $mod+m exec --no-startup-id ~/scripts/setup-displays.sh
 bindsym $mod+Ctrl+a exec --no-startup-id ~/scripts/set-audio-channel.sh
 
+# Type clipboard contents as keystrokes (useful for VNC sessions where clipboard sync doesn't work)
+bindsym $mod+Shift+v exec --no-startup-id bash -c 'sleep 0.3; xdotool type --clearmodifiers "$(xclip -sel clipboard -o)"'
+
 # Lock screen after 90 minutes (5400 seconds)
 exec --no-startup-id xset s 5400 5400
 
