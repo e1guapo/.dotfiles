@@ -65,6 +65,7 @@
                         "sane-airscan"
                         "sane-backends"
 
+                        "remmina"  ;; VNC
                         "awscli"
                         "ranger"
                         "util-linux"
