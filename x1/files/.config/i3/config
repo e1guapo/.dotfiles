@@ -46,8 +46,8 @@ exec --no-startup-id xset s 5400 5400
 
 # xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
 # screen before suspend. Use loginctl lock-session to lock your screen.
-# lock.sh wraps i3lock: disables DPMS during lock to prevent DP-MST flicker on
-# unlock, then restores DPMS timers afterward.
+# lock.sh wraps i3lock and suppresses DPMS only for a short post-lock grace
+# window to avoid DP-MST flicker without keeping the monitor on indefinitely.
 exec --no-startup-id xss-lock --transfer-sleep-lock -- ~/scripts/lock.sh
 
 # NetworkManager is the most popular way to manage wireless networks on Linux,
