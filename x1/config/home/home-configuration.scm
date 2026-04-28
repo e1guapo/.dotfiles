@@ -137,13 +137,13 @@
                                             ("PATH" . "$HOME/Android/Sdk/platform-tools/:$PATH")
 
                                             ;; Ghidra
-                                            ("PATH" . "/opt/ghidra_11.4.2_PUBLIC:$PATH")
+                                            ("PATH" . "/opt/ghidra_12.0.4_PUBLIC:$PATH")
 
                                             ("PATH" . "$HOME/.local/bin:$PATH")
                                             ("PATH" . "$HOME/.npm-global/bin:$PATH")
                                             ("PATH" . "$HOME/bin:$PATH"))
 
-                                          '(("GHIDRA_INSTALL_DIR" . "/opt/ghidra_11.4.2_PUBLIC")
+                                          '(("GHIDRA_INSTALL_DIR" . "/opt/ghidra_12.0.4_PUBLIC")
 
                                             ;; Android
                                             ("SCRCPY_PATH" .  "/home/dennis/data/tools/scrcpy-linux-x86_64-v3.3.3")
