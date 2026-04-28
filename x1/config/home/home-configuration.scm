@@ -103,6 +103,7 @@
                         "simg2img"
                         "opam"
                         "vim-full"
+                        "bat"
                         "inotify-tools"
                         "xclip"
                         "make"
@@ -139,6 +140,7 @@
                                             ("PATH" . "/opt/ghidra_11.4.2_PUBLIC:$PATH")
 
                                             ("PATH" . "$HOME/.local/bin:$PATH")
+                                            ("PATH" . "$HOME/.npm-global/bin:$PATH")
                                             ("PATH" . "$HOME/bin:$PATH"))
 
                                           '(("GHIDRA_INSTALL_DIR" . "/opt/ghidra_11.4.2_PUBLIC")
@@ -146,6 +148,9 @@
                                             ;; Android
                                             ("SCRCPY_PATH" .  "/home/dennis/data/tools/scrcpy-linux-x86_64-v3.3.3")
                                             ("ANDROID_SDK_ROOT" .  "/home/dennis/Android/Sdk")
+
+                                            ;; npm global install prefix (so `npm install -g` works without sudo).
+                                            ("npm_config_prefix" . "$HOME/.npm-global")
 
                                             ;; Ensure Python picks up Guix-provided site-packages.
                                             ("PYTHONPATH" . "$GUIX_PYTHONPATH${PYTHONPATH:+:}$PYTHONPATH"))
