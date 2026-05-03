@@ -66,13 +66,14 @@
                         "sane-backends"
 
                         "remmina"  ;; VNC
-                        "awscli"
+                        "awscli"    ;; AWS CLI tool
                         "ranger"
+                        "okular" ;; PDF viewer (used by ranger/rifle)
                         "util-linux"
                         "gdb-multiarch"
                         "clang"
                         "llvm"
-                        "cloc"
+                        "cloc"      ;; lines of code
                         "strace"
                         "tree"
                         "nmap"
@@ -80,7 +81,7 @@
                         "imagemagick"
                         "cifs-utils"
                         "node"
-                        "openjdk@23.0.2"
+                        "openjdk@23.0.2:jdk"
                         "gradle"
                         "git-lfs" ;; uncomment when not broken (ruby-activesupport test failing)
                         "gnupg"
@@ -106,6 +107,7 @@
                         "bat"
                         "inotify-tools"
                         "xclip"
+                        "xdotool" ;; X11 input automation (used by i3 Mod+Shift+v paste)
                         "make"
                         "file"
                         "libbsd"
@@ -172,8 +174,6 @@
                   (service home-bash-service-type
                            (home-bash-configuration
                             (aliases '(
-                                       ("claude" . "npx -y @anthropic-ai/claude-code")
-                                       ("codex" . "npx -y @openai/codex@latest")
                                        ("every-code" . "npx -y @just-every/code")
                                        ("l" . "ls -CF")
                                        ("la" . "ls -A")

@@ -167,6 +167,24 @@ Instead, use one of these approaches:
 
 Both methods create isolated environments with their own pip installation.
 
+### Ghidra
+
+Ghidra is installed manually under `/opt/ghidra_<version>_PUBLIC` (referenced as `GHIDRA_INSTALL_DIR` in the manifest). On first launch — and again whenever `update-channels.sh` bumps `openjdk` — Ghidra prompts:
+
+```
+JDK 21+ (64-bit) could not be found and must be manually chosen!
+```
+
+This is not a misconfiguration. Ghidra's launcher (`support/launch.sh`) uses `java` from `$PATH` only to bootstrap `LaunchSupport.jar`; the actual JDK selection is done inside `LaunchSupport`, which only reads its cached choice and `support/launch.properties` — it ignores `$PATH` and `$JAVA_HOME`.
+
+When prompted, paste the JDK home from the active Guix profile:
+
+```
+readlink -f ~/.guix-home/profile/bin/java | xargs dirname | xargs dirname
+```
+
+(produces something like `/gnu/store/<hash>-openjdk-23.0.2`). Ghidra caches the selection in `~/.config/ghidra/.ghidra_<ver>_PUBLIC/.launch.properties` until the next openjdk store-path change invalidates it.
+
 ### install guix
 ```
 wget 'https://git.savannah.gnu.org/gitweb/?p=guix.git;a=blob_plain;f=etc/guix-install.sh;hb=HEAD'
