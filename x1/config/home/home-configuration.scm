@@ -53,6 +53,9 @@
                         ;; android stuff
                         "git-repo"
 
+                        ;; blaze/flint
+                        "lmdb"
+
                         ;; RS BBN access
                         "keepassxc"
 
@@ -141,6 +144,7 @@
                                             ;; Ghidra
                                             ("PATH" . "/opt/ghidra_12.0.4_PUBLIC:$PATH")
 
+                                            ("PATH" . "$HOME/.ghcup/bin:$PATH")
                                             ("PATH" . "$HOME/.local/bin:$PATH")
                                             ("PATH" . "$HOME/.npm-global/bin:$PATH")
                                             ("PATH" . "$HOME/bin:$PATH"))
@@ -155,7 +159,11 @@
                                             ("npm_config_prefix" . "$HOME/.npm-global")
 
                                             ;; Ensure Python picks up Guix-provided site-packages.
-                                            ("PYTHONPATH" . "$GUIX_PYTHONPATH${PYTHONPATH:+:}$PYTHONPATH"))
+                                            ("PYTHONPATH" . "$GUIX_PYTHONPATH${PYTHONPATH:+:}$PYTHONPATH")
+
+                                            ;; Guix Home sets LIBRARY_PATH but not LD_LIBRARY_PATH;
+                                            ;; non-Guix binaries (ghcup, stack) need it at runtime.
+                                            ("LD_LIBRARY_PATH" . "$HOME/.guix-home/profile/lib${LD_LIBRARY_PATH:+:}$LD_LIBRARY_PATH"))
 
                                             ;; for just-every/code - open source fork of codex cli
                                             ;; We change the default since VS Code already uses ~/.code

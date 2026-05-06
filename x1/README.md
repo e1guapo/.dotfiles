@@ -137,11 +137,14 @@ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 sudo dracut -f
 ```
 
-### Install uv and brave browser
+### Install uv, brave browser, and ghcup (Haskell toolchain)
 ```
 curl -LsSf https://astral.sh/uv/install.sh | sh
 curl -fsS https://dl.brave.com/install.sh | sh
+curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_INSTALL_STACK=1 sh
 ```
+
+ghcup installs GHC, Stack, and cabal into `~/.ghcup/`. The manifest adds `~/.ghcup/bin` to `$PATH`. To manage versions later: `ghcup tui`.
 
 _Change startup for brave to increase font size with the `--force-device-scale-factor=2` parameter. We currently do this with a wrapper script: `~/bin/browser`._
 
