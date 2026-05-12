@@ -27,6 +27,7 @@ function set_git_branch () {
 
 function set_bash_prompt () {
     local exit_code=$?
+    printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
     PS1="\n"
 
     # Add virtual environment if active
