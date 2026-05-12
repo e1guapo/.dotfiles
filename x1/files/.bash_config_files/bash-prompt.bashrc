@@ -35,7 +35,7 @@ function set_bash_prompt () {
     fi
 
     # Host and directory
-    PS1+="${LT_CYAN}\u@\h${COLOR_NONE} ${LT_RED}${BOLD}⛧${COLOR_NONE} "
+    PS1+="${LT_CYAN}\u@\h${COLOR_NONE} ${LT_RED}${BOLD}✦${COLOR_NONE} "
     PS1+="${GREEN}\w${COLOR_NONE} • "
 
     # Add git branch

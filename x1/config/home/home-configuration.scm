@@ -4,6 +4,8 @@
 ;; need to capture the channels being used, as returned by "guix describe".
 ;; See the "Replicating Guix" section in the manual.
 
+(add-to-load-path (dirname (current-filename)))
+
 (use-modules (gnu home)
              (gnu packages)
              (gnu services)
@@ -11,7 +13,8 @@
              (gnu home services)
              (gnu home services dotfiles)
              (gnu home services shells)
-             (gnu home services xdg))
+             (gnu home services xdg)
+             (packages nerd-fonts))
 
 (define flameshot-shortcuts-desktop
   (plain-file
@@ -43,7 +46,11 @@
 (home-environment
   ;; Below is the list of packages that will show up in your
   ;; Home profile, under ~/.guix-home/profile.
-  (packages (specifications->packages (list "meld"
+  (packages (append
+              (list font-dejavu-sans-mono-nerd)
+              (specifications->packages (list "meld"
+
+                        "alacritty"
 
                         ;; uncomment to try with guix container
                         ;; "diffutils"
@@ -74,6 +81,7 @@
                         "okular" ;; PDF viewer (used by ranger/rifle)
                         "util-linux"
                         "gdb-multiarch"
+                        "bat"
                         "clang"
                         "llvm"
                         "cloc"      ;; lines of code
@@ -128,7 +136,7 @@
                         "openssl"
                         "pkg-config"
                         "libxcrypt"
-                        "glibc-locales")))
+                        "glibc-locales"))))
 
   ;; Below is the list of Home services.  To search for available
   ;; services, run 'guix home search KEYWORD' in a terminal.
@@ -178,7 +186,8 @@
                                           '(("XCURSOR_PATH" . "$HOME/.guix-home/profile/share/icons:/usr/share/icons:$HOME/.icons")
                                             ("XCURSOR_SIZE" . "48")
                                             ("XCURSOR_THEME" . "Adwaita")
-                                            ("GDK_DPI_SCALE" . "1.25"))))
+                                            ("GDK_DPI_SCALE" . "1.25")
+                                            ("TERMINAL" . "alacritty"))))
                   (service home-bash-service-type
                            (home-bash-configuration
                             (aliases '(
