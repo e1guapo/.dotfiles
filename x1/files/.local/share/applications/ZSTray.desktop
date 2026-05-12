@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+Name=ZScaler Client Connector
+Comment=ZScaler Client Connector
+Icon=/opt/zscaler/Images/ZscalerAppTop.png
+Exec=env -u LD_LIBRARY_PATH /opt/zscaler/scripts/zstray_desktop.sh %u
+Terminal=false
+Categories=Network;Application;
+MimeType=x-scheme-handler/zsa;application/x-zstray;
+X-KDE-Protocols=zsa;
+X-GNOME-Autostart-Delay=1
