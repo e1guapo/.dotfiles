@@ -5,8 +5,16 @@ if [[ "$1" == *":"* ]]; then
     serial="$1"
     shift
     echo "DEBUG using serial: $serial" >&2
-    ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 command adb -s "$serial" "$@"
+    # start-server/kill-server are local operations; -s would target the remote host
+    if [[ "$1" == "start-server" || "$1" == "kill-server" ]]; then
+        command adb "$@"
+    # scrcpy already passed -s <serial>; pass args through to avoid duplicate
+    elif [[ "$1" == "-s" ]]; then
+        command adb "$@"
+    else
+        command adb -s "$serial" "$@"
+    fi
 else
     echo "DEBUG no serial detected" >&2
-    ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 command adb "$@"
+    command adb "$@"
 fi

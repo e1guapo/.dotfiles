@@ -24,8 +24,7 @@ EOF
 sed -i "s|SERIAL_PLACEHOLDER|$serial|" /tmp/adb-with-serial-$$
 chmod +x /tmp/adb-with-serial-$$
 
-ADB_SERVER_SOCKET=tcp:127.0.0.1:5038 \
-    ADB="/tmp/adb-with-serial-$$" \
-    ${SCRCPY_PATH}/scrcpy --force-adb-forward --stay-awake --disable-screensaver --no-audio "${args[@]}"
+ADB="/tmp/adb-with-serial-$$" \
+    ${SCRCPY_PATH}/scrcpy --stay-awake --disable-screensaver --no-audio "${args[@]}"
 
 rm -f /tmp/adb-with-serial-$$

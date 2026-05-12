@@ -117,7 +117,7 @@
                         "libtool"
                         "libffi"
                         "xz"
-                        "ncurses"
+                        "ncurses-with-tinfo"
                         "sqlite"
                         "readline"
                         "file"
