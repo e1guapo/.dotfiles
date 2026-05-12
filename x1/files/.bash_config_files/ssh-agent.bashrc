@@ -23,3 +23,8 @@ if [[ $- == *i* ]] && command -v ssh-agent >/dev/null 2>&1; then
 
     unset env
 fi
+
+ssh() {
+    printf "\033]0;ssh: %s\007" "$*"
+    command ssh "$@"
+}
