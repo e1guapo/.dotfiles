@@ -233,3 +233,8 @@ sudo dracut -f
 ```
 
 6. Reboot to verify that everything worked.
+
+# System Maintenance
+## Guix package updates
+The base channel descriptions we use are described in `files/.config/guix/base-channels.scm`. Every time we update, we pin the current snapshot in `files/.config/guix/channels.scm`. We do this automatically with `scripts/update-channels.sh`. If the update succeeds with all of our packages, the `channels.scm` file is updated. Otherwise, we revert and stay at the current snapshot.
+
