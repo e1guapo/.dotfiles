@@ -1,5 +1,11 @@
+[window]
+padding = { x = 4, y = 4 }
+
 [font]
 size = 20.0
 
 [font.normal]
 family = "DejaVuSansM Nerd Font Mono"
+
+[selection]
+save_to_clipboard = true
