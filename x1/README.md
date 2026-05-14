@@ -238,3 +238,11 @@ sudo dracut -f
 ## Guix package updates
 The base channel descriptions we use are described in `files/.config/guix/base-channels.scm`. Every time we update, we pin the current snapshot in `files/.config/guix/channels.scm`. We do this automatically with `scripts/update-channels.sh`. If the update succeeds with all of our packages, the `channels.scm` file is updated. Otherwise, we revert and stay at the current snapshot.
 
+# Troubleshooting
+
+## Distorted audio through laptop speakers
+PipeWire can occasionally enter a degraded state that causes audio to sound choppy or distorted (rapid cutting in and out). Restart PipeWire to fix it:
+```
+systemctl --user restart pipewire
+```
+
