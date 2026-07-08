@@ -29,10 +29,14 @@ If a `DP-X-Y connected` line appears, run:
 ~/scripts/setup-displays.sh
 ```
 
-**Step 2: Force a Thunderbolt rescan**
+**Step 2: Rebind the Thunderbolt device**
+
+The `/sys/bus/thunderbolt/devices/0-0/rescan` sysfs file was removed in kernel 6.19+. Use driver rebind instead:
 
 ```sh
-echo 1 | sudo tee /sys/bus/thunderbolt/devices/0-0/rescan
+echo 0-1 | sudo tee /sys/bus/thunderbolt/drivers/thunderbolt/unbind
+sleep 2
+echo 0-1 | sudo tee /sys/bus/thunderbolt/drivers/thunderbolt/bind
 sleep 3
 xrandr --query | grep "^DP"
 ```
