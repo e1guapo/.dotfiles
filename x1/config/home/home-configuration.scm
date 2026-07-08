@@ -219,4 +219,19 @@
                                    `("autostart/set-flameshot-shortcuts.desktop"
                                      ,flameshot-shortcuts-desktop)
                                    `("autostart/configure-xfce-power.desktop"
-                                     ,xfce-power-config-desktop))))))
+                                     ,xfce-power-config-desktop)))
+                  ;; Guix Home only copies *.desktop files; it never refreshes
+                  ;; the XDG mimeinfo.cache. Without this, mime/scheme handlers
+                  ;; declared in deployed .desktop files (e.g. ZSTray's zsa://
+                  ;; scheme + application/x-zstray) don't resolve, and the
+                  ;; browser shows "No Apps available" during Zscaler SAML auth.
+                  ;; update-desktop-database is a Fedora system tool (not in the
+                  ;; Guix profile), so reference it by absolute path and guard.
+                  (simple-service 'refresh-desktop-database
+                                  home-activation-service-type
+                                  #~(let ((udd "/usr/bin/update-desktop-database")
+                                          (dir (string-append (getenv "HOME")
+                                                              "/.local/share/applications")))
+                                      (when (and (file-exists? udd)
+                                                 (file-exists? dir))
+                                        (system* udd dir)))))))
