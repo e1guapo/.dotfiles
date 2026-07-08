@@ -120,3 +120,36 @@ by kernel lockdown (Secure Boot), so systemd falls back to **powering off**.
    # Should show lid-action values of 1 (suspend), not 4 (shutdown)
    xfconf-query -c xfce4-power-manager -l -v | grep lid
    ```
+
+## Bare `python3` Can't Import Guix Python Libraries
+
+### Symptoms
+
+Running a script directly (`python3 foo.py`, no venv active) fails with
+`ModuleNotFoundError` for a package installed via the Guix manifest.
+
+### Cause
+
+By design, we do **not** export `PYTHONPATH` globally (it would shadow every
+venv). Bare Guix `python3` therefore sees only stdlib, not profile
+`site-packages`.
+
+### Fix
+
+Run project python inside a venv or `uv` env, not bare:
+
+```sh
+python3 -m venv .venv && source .venv/bin/activate
+pip install <deps>          # or: uv pip install <deps>
+python3 foo.py
+```
+
+If a script genuinely needs a Guix-installed lib without a venv, prefix that
+one command only (don't re-add the global export):
+
+```sh
+PYTHONPATH="$GUIX_PYTHONPATH" python3 foo.py
+```
+
+Note: Guix python **apps** (`aws`, `ranger`, `meld`) always work — they wrap
+their own paths and don't need this.

@@ -166,8 +166,10 @@
                                             ;; npm global install prefix (so `npm install -g` works without sudo).
                                             ("npm_config_prefix" . "$HOME/.npm-global")
 
-                                            ;; Ensure Python picks up Guix-provided site-packages.
-                                            ("PYTHONPATH" . "$GUIX_PYTHONPATH${PYTHONPATH:+:}$PYTHONPATH")
+                                            ;; NOTE: do NOT re-export GUIX_PYTHONPATH into PYTHONPATH.
+                                            ;; It shadows every venv/uv env with Guix profile libs.
+                                            ;; See TROUBLESHOOTING.md "Bare python3 Can't Import
+                                            ;; Guix Python Libraries".
 
                                             ;; Guix Home sets LIBRARY_PATH but not LD_LIBRARY_PATH;
                                             ;; non-Guix binaries (ghcup, stack) need it at runtime.
