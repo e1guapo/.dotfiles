@@ -1,7 +1,7 @@
 # -*- mode: sh; -*-
 # Adapted from https://jdhao.github.io/2021/03/31/bash_prompt_config/
 
-GRAY="\[\e[1;30m\]"
+GRAY="\[\e[0;33m\]"
 BOLD="\[\033[1m\]"
 LT_CYAN="\[\e[1;36m\]"
 LT_GREEN="\[\e[1;32m\]"
