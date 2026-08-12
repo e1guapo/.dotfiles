@@ -84,6 +84,20 @@
                         "bat"
                         "clang"
                         "llvm"
+
+                        ;; Rust toolchain. Single multi-output package; each
+                        ;; output must be listed separately or its binaries
+                        ;; never land in the profile.
+                        ;; NOTE: rustc links via `cc`, which resolves to
+                        ;; Fedora's /usr/bin/cc. Add "gcc-toolchain" only if
+                        ;; linking breaks -- it shadows /usr/bin/gcc for every
+                        ;; other native build on this host (python wheels, etc).
+                        "rust"           ;; rustc, rustdoc
+                        "rust:cargo"     ;; cargo
+                        "rust:tools"     ;; clippy, rustfmt
+                        "rust:rust-src"  ;; std sources for rust-analyzer
+                        "rust-analyzer"
+
                         "cloc"      ;; lines of code
                         "strace"
                         "tree"
