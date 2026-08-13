@@ -1,0 +1,25 @@
+; -*- lisp -*-
+;;; Local supplement to the guix-daemon SELinux policy.
+;;;
+;;; Guix ships its own policy at
+;;; /var/guix/profiles/per-user/root/current-guix/share/selinux/guix-daemon.cil
+;;; and that file is the primary source of truth.  This module holds ONLY the
+;;; rules upstream is still missing.
+;;;
+;;; Before adding anything here, check whether the shipped .cil already has the
+;;; rule and the *loaded* module is merely stale:
+;;;
+;;;   grep -n '<target type>' .../share/selinux/guix-daemon.cil   # shipped
+;;;   sesearch -A -s guix_daemon.guix_daemon_t -t <target type>   # loaded
+;;;
+;;; If the rule is in the shipped file but not in `sesearch` output, the fix is
+;;; to re-run scripts/install_selinux_policy.sh, not to add a rule here.
+;;; Keeping this file minimal is what makes upstream improvements land.
+
+;; guix-daemon appends to /var/guix/last-expiry-cleanup after a garbage
+;; collection pass.  Upstream grants write/create/unlink on guix_daemon_conf_t
+;; files but never lists `append`, so every GC trips an AVC denial.  This is
+;; strictly narrower than the `write` the daemon already holds on this type.
+(allow guix_daemon.guix_daemon_t
+       guix_daemon.guix_daemon_conf_t
+       (file (append)))

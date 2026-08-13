@@ -121,6 +121,79 @@ by kernel lockdown (Secure Boot), so systemd falls back to **powering off**.
    xfconf-query -c xfce4-power-manager -l -v | grep lid
    ```
 
+## Guix Reconfigure Fails Until SELinux Is Set Permissive
+
+### Symptoms
+
+`guix home reconfigure` (or any build) fails under enforcing mode and succeeds
+after `sudo setenforce 0`. Setting the policy up per the Guix manual fixes it
+for a while, then it breaks again.
+
+### Cause
+
+`semodule -i` takes a **one-time snapshot** of the policy Guix ships at
+`/var/guix/profiles/per-user/root/current-guix/share/selinux/guix-daemon.cil`.
+Each Guix release adds rules to that file. When root runs `guix pull`, the
+daemon moves forward but the loaded module does not, so the newer daemon
+performs operations the older policy never allowed. That is the recurrence:
+the policy is drifting behind the binary it confines, one `guix pull` at a time.
+
+Confirm the drift by diffing shipped against loaded:
+
+```sh
+# shipped
+grep -n 'fs_t' /var/guix/profiles/per-user/root/current-guix/share/selinux/guix-daemon.cil
+# loaded
+sesearch -A -s guix_daemon.guix_daemon_t -t fs_t -c filesystem
+```
+
+A rule present in the first and absent from the second means the module is
+stale, **not** that upstream is missing a rule.
+
+### Fix
+
+```sh
+./scripts/install_selinux_policy.sh
+sudo setenforce 1
+```
+
+The script reinstalls upstream's policy plus
+`files/etc/selinux/guix-daemon-local.cil` (rules upstream genuinely lacks),
+restores file contexts, and stamps a checksum of both inputs at
+`/var/lib/misc/guix-selinux-policy.stamp`. `reconfigure.sh` and
+`update-channels.sh` call it first, so drift gets corrected before the build
+that would have tripped over it. Re-run it manually after
+`sudo -i guix pull`.
+
+### Diagnosing a new denial
+
+Set permissive so denials are logged rather than blocking, reproduce, then
+read the log:
+
+```sh
+sudo setenforce 0
+./scripts/reconfigure.sh
+sudo ausearch -m AVC,USER_AVC -ts recent | audit2allow -w
+sudo setenforce 1
+```
+
+Check the shipped `.cil` first. Only if the rule is absent there does it belong
+in `guix-daemon-local.cil` — hand-translated to CIL and commented with why.
+Do not pipe `audit2allow -M` output straight into the policy; it grants
+whatever happened to get logged.
+
+### Label drift
+
+Labels are separate from rules and rarely the problem — new store items inherit
+`guix_store_content_t` from `/gnu/store` at creation. After a restore, disk
+migration, or full-system relabel, fix them with:
+
+```sh
+./scripts/install_selinux_policy.sh --relabel-store
+```
+
+That relabels all of `/gnu/store`, which is slow, so it is opt-in.
+
 ## Bare `python3` Can't Import Guix Python Libraries
 
 ### Symptoms
