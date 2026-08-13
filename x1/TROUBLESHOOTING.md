@@ -151,5 +151,46 @@ one command only (don't re-add the global export):
 PYTHONPATH="$GUIX_PYTHONPATH" python3 foo.py
 ```
 
-Note: Guix python **apps** (`aws`, `ranger`, `meld`) always work — they wrap
-their own paths and don't need this.
+Note: Guix python **apps** (`aws`, `ranger`, `meld`) should work without this —
+their wrappers export `GUIX_PYTHONPATH` themselves. If one of them fails, see
+the next section.
+
+## Guix Python Apps Fail with `ModuleNotFoundError`
+
+### Symptoms
+
+`ranger` (or `meld`, `aws`, any Guix python application) aborts on launch:
+
+```
+File ".../ranger-1.9.4/bin/.ranger-real", line 36, in <module>
+    import ranger
+ModuleNotFoundError: No module named 'ranger'
+```
+
+but works with user site-packages disabled:
+
+```sh
+PYTHONNOUSERSITE=1 ranger --version   # succeeds
+```
+
+### Cause
+
+Guix python apps are shell wrappers that export `GUIX_PYTHONPATH`. The
+interpreter does not read that variable natively — Guix's own
+`sitecustomize.py`, shipped in the interpreter's store `site-packages`, is
+what converts it into `sys.path` entries.
+
+Python imports **only the first** `sitecustomize` module found on `sys.path`,
+and `~/.local/lib/python3.11/site-packages` comes *before* the store
+`site-packages`. So a `sitecustomize.py` deployed into the user
+site-packages silently disables `GUIX_PYTHONPATH` for every Guix python app.
+
+### Fix
+
+Never name a local hook `sitecustomize.py`. Use
+`files/.local/lib/python3.11/site-packages/usercustomize.py` — Python imports
+`usercustomize` right after `sitecustomize`, so Guix's path setup runs *and*
+the local hook runs. Then `./scripts/reconfigure.sh`.
+
+This is unrelated to the global `PYTHONPATH` export removal above;
+re-adding that export would mask this bug while re-breaking venv isolation.
