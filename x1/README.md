@@ -170,6 +170,17 @@ Instead, use one of these approaches:
 
 Both methods create isolated environments with their own pip installation.
 
+### Secrets (OAuth tokens, API keys)
+
+Secrets live in `~/.config/secrets/env` (mode `600`), **outside this repo** — `files/` is git-tracked and copied into the world-readable `/gnu/store`. `files/.bash_config_files/secrets.bashrc` sources that file with `set -a`, so add one plain line per secret and no `export` is needed:
+
+```bash
+echo 'MY_TOKEN=xxx' >> ~/.config/secrets/env
+exec bash   # or open a new terminal
+```
+
+New secrets need no reconfigure — only the loader is Guix-managed.
+
 ### Ghidra
 
 Ghidra is installed manually under `/opt/ghidra_<version>_PUBLIC` (referenced as `GHIDRA_INSTALL_DIR` in the manifest). On first launch — and again whenever `update-channels.sh` bumps `openjdk` — Ghidra prompts:

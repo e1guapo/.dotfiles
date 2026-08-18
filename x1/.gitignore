@@ -1,0 +1,18 @@
+# Secrets live in ~/.config/secrets/, never in this repo (see
+# files/.bash_config_files/secrets.bashrc). These patterns are defense in
+# depth in case a secret file is ever created inside the working tree.
+.env
+.env.*
+*.env
+*secret*
+*secrets*
+*token*
+*credentials*
+
+# The loader itself contains no secrets, only the path to them.
+!files/.bash_config_files/secrets.bashrc
+
+# Editor/OS noise
+*~
+*.swp
+.DS_Store

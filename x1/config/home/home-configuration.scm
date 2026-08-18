@@ -219,7 +219,8 @@
                                     (local-file (string-append bash-config-dir "flatpak.bashrc"))
                                     (local-file (string-append bash-config-dir "ssh-agent.bashrc"))
                                     (local-file (string-append bash-config-dir "adb.bashrc"))
-                                    (local-file (string-append bash-config-dir "uv.bashrc"))))
+                                    (local-file (string-append bash-config-dir "uv.bashrc"))
+                                    (local-file (string-append bash-config-dir "secrets.bashrc"))))
                             (bash-profile (list (local-file (string-append bash-config-dir "bash_profile.bashrc"))))
                             (bash-logout (list (local-file (string-append bash-config-dir "bash_logout.bashrc"))))))
                   (service home-dotfiles-service-type
