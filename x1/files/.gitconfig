@@ -26,3 +26,9 @@
     path = .gitconfig-public
 [includeIf "gitdir:**/aixcc/**"]
     path = .gitconfig-aixcc
+[submodule]
+    recurse = true
+[status]
+    submoduleSummary = true
+[push]
+    recurseSubmodules = check

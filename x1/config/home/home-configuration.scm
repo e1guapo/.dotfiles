@@ -84,6 +84,7 @@
                         "bat"
                         "clang"
                         "llvm"
+                        "shellcheck"
 
                         ;; Rust toolchain. Single multi-output package; each
                         ;; output must be listed separately or its binaries
