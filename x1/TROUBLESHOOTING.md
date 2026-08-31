@@ -10,7 +10,22 @@ may fail to establish, causing the external monitor to not appear in `xrandr`.
 
 - `xrandr` shows only `eDP-1` connected; `DP-1`, `DP-2`, `HDMI-1` all disconnected
 - No `DP-X-Y` (MST sub-connector) entries appear
-- `dmesg | grep thunderbolt` shows: `DP: not active, tearing down`
+- `~/scripts/setup-displays.sh` logs `no external MST output detected; exiting`
+
+The script exiting like that is a *symptom*, not the fault — there is no output
+for it to configure. Don't debug the script.
+
+Two things that look damning but are **not** diagnostic on their own:
+
+- `dmesg | grep thunderbolt` showing `DP: not active, tearing down`. This also
+  appears on boots where the monitor works fine (it fired repeatedly on
+  2026-07-30, and the external display came up normally through 2026-08-27).
+  It's the kernel reaping an idle tunnel. `DP tunnel activation failed,
+  aborting` is the message that actually indicates a failed attempt — and its
+  *absence* means no attempt was made at all.
+- A `boltctl` link rate of `20 Gb/s = 2 lanes * 10 Gb/s`. That is this dock's
+  normal negotiated rate, not a degraded one, and it carries 3840x1600@60 with
+  room to spare. Don't go replacing Thunderbolt cables over it.
 
 ### Fix (try in order)
 
@@ -29,19 +44,38 @@ If a `DP-X-Y connected` line appears, run:
 ~/scripts/setup-displays.sh
 ```
 
-**Step 2: Rebind the Thunderbolt device**
+**Step 2: Rebind the Thunderbolt PCI controller**
 
-The `/sys/bus/thunderbolt/devices/0-0/rescan` sysfs file was removed in kernel 6.19+. Use driver rebind instead:
+Rebind at the **PCI** level, against the NHI controllers. There is no
+`/sys/bus/thunderbolt/drivers/thunderbolt/unbind` — the thunderbolt bus
+registers no named driver, so `/sys/bus/thunderbolt/drivers/` is empty and any
+unbind path under it fails with `No such file or directory`. (The older
+`/sys/bus/thunderbolt/devices/0-0/rescan` file is likewise gone as of 6.19.)
+
+This tears down every dock tunnel for a few seconds — USB, ethernet and audio
+on the dock re-enumerate. Don't run it if your only keyboard or mouse is
+attached to the dock.
 
 ```sh
-echo 0-1 | sudo tee /sys/bus/thunderbolt/drivers/thunderbolt/unbind
-sleep 2
-echo 0-1 | sudo tee /sys/bus/thunderbolt/drivers/thunderbolt/bind
+echo 0000:00:0d.2 | sudo tee /sys/bus/pci/drivers/thunderbolt/unbind
 sleep 3
+echo 0000:00:0d.2 | sudo tee /sys/bus/pci/drivers/thunderbolt/bind
+sleep 5
 xrandr --query | grep "^DP"
 ```
 
 If a connected display appears, run `~/scripts/setup-displays.sh`.
+
+`0000:00:0d.2` is domain0's NHI; `0000:00:0d.3` is domain1. Confirm both with
+`ls /sys/bus/pci/drivers/thunderbolt/`. Which domain the dock landed on varies
+between plug events, so if `0d.2` alone doesn't bring the tunnel back, repeat
+against `0d.3`.
+
+Deauthorize/reauthorize (`echo 0` then `1` into
+`/sys/bus/thunderbolt/devices/0-1/authorized`) looks like a lighter alternative
+and the domain advertises support for it (`domain0/deauthorization` reads `1`),
+but it did **not** rebuild the DP tunnel when tried on 2026-08-31. Go straight
+to the PCI rebind.
 
 **Step 3: Reload the xe (GPU) driver**
 
@@ -87,7 +121,20 @@ journalctl -b 0 -k | grep -iE "drm|xe|display|hdmi|dp-|connector"
 
 # Full xrandr state
 xrandr --verbose
+
+# Negotiated link rate (20 Gb/s = 2 lanes * 10 Gb/s is normal here)
+cat /sys/bus/thunderbolt/devices/0-1/rx_speed /sys/bus/thunderbolt/devices/0-1/rx_lanes
+
+# Rule out a kernel update before blaming one — compare across boots
+journalctl --list-boots
+for b in 0 -1 -2; do journalctl -b $b -k -o cat | grep -m1 "Linux version"; done
 ```
+
+Before assuming a kernel regression, run that last loop. On 2026-08-31 the
+external display stopped appearing and a kernel update was the obvious suspect,
+but boots -3 through 0 were all `6.19.14-100.fc42` — the same kernel the
+monitor had been working on since May. The fault was a wedged DP tunnel, fixed
+by Step 2.
 
 ## Unexpected Shutdown Instead of Suspend
 
