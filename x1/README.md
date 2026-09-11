@@ -80,6 +80,34 @@ XFCE Power Manager settings are automatically configured via `files/scripts/conf
 **Other settings** (configured manually via GUI, not managed by script):
 - Brightness levels, button actions, etc. can be adjusted using `xfce4-power-manager-settings` GUI
 
+### Firmware updates
+
+Use `fwupdmgr` to check LVFS for laptop, dock, SSD, and Secure Boot firmware:
+
+```bash
+# Show installed firmware and device IDs
+fwupdmgr get-devices
+
+# Refresh signed metadata and list applicable updates
+sudo fwupdmgr refresh --force
+fwupdmgr get-updates
+
+# Install the offered updates and follow any reboot instructions
+sudo fwupdmgr update
+```
+
+Before updating system, USB-C Power Delivery, or dock firmware, connect a known-stable
+power source and verify that the laptop actually sees AC power:
+
+```bash
+cat /sys/class/power_supply/AC/online  # must print 1
+cat /sys/class/power_supply/BAT0/status
+```
+
+Because this machine's Thunderbolt dock has occasionally provided data without power,
+prefer the direct Lenovo USB-C charger for firmware updates. Do not disconnect power or
+the dock, suspend the laptop, or force a shutdown while an update is in progress.
+
 ### Install obsidian, yubikey authenticator.
 ```
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
@@ -256,4 +284,3 @@ PipeWire can occasionally enter a degraded state that causes audio to sound chop
 ```
 systemctl --user restart pipewire
 ```
-
