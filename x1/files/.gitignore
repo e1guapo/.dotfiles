@@ -4,3 +4,10 @@ tags
 *.backup
 .aider*
 .claude/
+
+.devcontainer
+.devcontainer-plugins
+.devcontainer-skills
+
+.scratch
+*.apk
