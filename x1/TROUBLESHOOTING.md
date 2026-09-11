@@ -46,7 +46,18 @@ If a `DP-X-Y connected` line appears, run:
 
 **Step 2: Rebind the Thunderbolt PCI controller**
 
-Rebind at the **PCI** level, against the NHI controllers. There is no
+Run the recovery helper from a terminal in the graphical session:
+
+```sh
+~/scripts/recover-external-display.sh
+```
+
+It finds the NHI controller hosting the dock, asks for confirmation and `sudo`,
+rebinds that controller, waits for the MST output, and then runs
+`setup-displays.sh`. Dock USB, ethernet, and audio disconnect for a few seconds.
+
+The manual equivalent is below. Rebind at the **PCI** level, against the NHI
+controllers. There is no
 `/sys/bus/thunderbolt/drivers/thunderbolt/unbind` — the thunderbolt bus
 registers no named driver, so `/sys/bus/thunderbolt/drivers/` is empty and any
 unbind path under it fails with `No such file or directory`. (The older
