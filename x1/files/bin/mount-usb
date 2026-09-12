@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+# The SanDisk Cruzer Force labeled "MyDrive".  A filesystem UUID is stable
+# across reconnects, unlike a kernel name such as /dev/sda.
+readonly default_uuid="af762491-beb1-40fa-8039-93a35905e341"
+
+usage() {
+    cat <<'EOF'
+Usage: mount-usb [DEVICE|UUID]
+
+Mount a filesystem through UDisks, without sudo.  With no argument, mount the
+MyDrive USB stick.  Pass a /dev path or filesystem UUID to mount another disk.
+EOF
+}
+
+case "${1:-}" in
+    -h|--help)
+        usage
+        exit 0
+        ;;
+esac
+
+if ! command -v udisksctl >/dev/null 2>&1; then
+    echo "mount-usb: udisksctl is required" >&2
+    exit 1
+fi
+
+requested_device="${1:-$default_uuid}"
+if [[ "$requested_device" == /dev/* ]]; then
+    device="$requested_device"
+else
+    device="/dev/disk/by-uuid/$requested_device"
+fi
+
+if [[ ! -e "$device" ]]; then
+    echo "mount-usb: device is not connected: $device" >&2
+    exit 1
+fi
+
+if mount_point=$(findmnt --noheadings --raw --source "$device" --output TARGET) &&
+   [[ -n "$mount_point" ]]; then
+    echo "Already mounted at $mount_point"
+    exit 0
+fi
+
+udisksctl mount --block-device "$device"

@@ -108,6 +108,25 @@ Because this machine's Thunderbolt dock has occasionally provided data without p
 prefer the direct Lenovo USB-C charger for firmware updates. Do not disconnect power or
 the dock, suspend the laptop, or force a shutdown while an update is in progress.
 
+### Mount and unmount the MyDrive USB stick
+
+The `mount-usb` helper uses the stick's filesystem UUID, so it remains reliable
+when Linux assigns a device name other than `/dev/sda`:
+
+```bash
+mount-usb
+unmount-usb
+```
+
+UDisks mounts it below `/run/media/$USER/`. The helper does not need `sudo` and
+prints the existing state when no change is needed. Both commands accept an
+explicit device path or UUID for another filesystem:
+
+```bash
+mount-usb /dev/sdb1
+unmount-usb 0123-4567
+```
+
 ### Install obsidian, yubikey authenticator.
 ```
 flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
